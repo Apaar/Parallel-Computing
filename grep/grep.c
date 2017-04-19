@@ -14,6 +14,8 @@ static struct stat filedata;
 static pthread_mutex_t pmutex;
 
 //structure to pass to each thread containing the chunk to be checked
+//start is pointer ot beginning of that chunk in momory
+//len length of the chunk
 typedef struct blob 
 {
    char *start;
@@ -32,6 +34,8 @@ void free_map(void)
 
 
 //handler function for each thread
+//iterates through the memory segment typecasting it as character array
+//uses memmem to find matches between serch string and given line
 void *run_blob(void *data)
 {
    char *line ,*n;
@@ -68,21 +72,16 @@ int main(int argc, char *argv[])
    pthread_t thread[MAX_BLOBS];
    blob_t blob[MAX_BLOBS];
    int num, i;
-
-   if (argc != optind + 2) {
-      puts("Error: wrong number of arguments");
-      return 0;
-   }
-
+   
    input = argv[optind++];
    input_len = strlen(input);
    filename = argv[optind];
   
-   int fd = open(filename, O_RDONLY);
-   fstat(fd, &filedata) ;
-   addr = mmap(NULL, filedata.st_size, PROT_READ, MAP_SHARED, fd, 0);
+   int f = open(filename, O_RDONLY);
+   fstat(f, &filedata) ;
+   addr = mmap(NULL, filedata.st_size, PROT_READ, MAP_SHARED, f, 0);
    atexit(free_map);
-   close(fd);
+   close(f);
 
    num = sysconf(_SC_NPROCESSORS_ONLN);
       if (num < 2) {
