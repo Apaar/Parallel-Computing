@@ -21,22 +21,22 @@ for i in $(seq 0 7);do
 	sed -i 1,27d 500k_600k_ParallelOutput$i.txt
 	head -n -22 500k_600k_ParallelOutput$i.txt > temp.txt 
 	mv  temp.txt 500k_600k_ParallelOutput$i.txt	
-	csplit --quiet --prefix=lolz$i --digits=1  500k_600k_ParallelOutput$i.txt /Score/ {*}
+	csplit --quiet --prefix=loop$i --digits=1  500k_600k_ParallelOutput$i.txt /Score/ {*}
 	sed '1d' DNA_split_sequence0$i.fa > temp_DNA.txt					#deletes first line and copies only the sequence into another file
 	count_partition=$(wc -c < temp_DNA.txt)
 	ratio=$(echo "scale=4; $count_DNA / $count_partition"|bc)
-	rm lolz"$i"0
-	for f in lolz$i*;do
-		e=$(grep -Po 'Expect = \K.*(?=,)'  ${f})
+	rm loop"$i"0
+	for f in loop$i*;do
+		e=$(grep -Po 'Expect = \K.*(?=,)'  ${f})						#computing the new E value
 		new_e=$(echo "scale=4;($ratio*$e)/1"|bc)
 		
 		t_e=10.0
 		if [ $(echo "$new_e > $t_e" | bc -l) -ne 0 ]; then
-			rm -rf lolz$i*
+			rm -rf loop$i*
 			break;
 		else
 			sed -i "s/Expect =.*, /Expect = $new_e , /g" ${f}
-			mv -i "${f}" "yoyo$new_e"	
+			mv -i "${f}" "file_$new_e"	
 		fi
 	done
 done
