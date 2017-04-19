@@ -13,16 +13,18 @@ static char *addr,*filename, *input;
 static struct stat filedata;
 static pthread_mutex_t pmutex;
 
-//structure to pass to each thread containing the chunk to be checked
-//start is pointer ot beginning of that chunk in momory
-//len length of the chunk
+/*
+  Structure to pass to each thread containing the chunk to be checked -
+  start is pointer ot beginning of that chunk in memory
+  len length of the chunk
+*/
 typedef struct blob 
 {
    char *start;
    int len;
 } blob_t;
 
-//freeing the memory segment that was mmap'ed
+//Freeing the memory segment that was mmap'ed
 void free_map(void)
 {
    if (addr)
@@ -33,9 +35,11 @@ void free_map(void)
 }
 
 
-//handler function for each thread
-//iterates through the memory segment typecasting it as character array
-//uses memmem to find matches between serch string and given line
+/*
+  Handler function for each thread
+  Iterates through the memory segment typecasting it as character array
+  Uses memmem to find matches between serch string and given line
+*/
 void *run_blob(void *data)
 {
    char *line ,*n;
@@ -73,16 +77,21 @@ int main(int argc, char *argv[])
    blob_t blob[MAX_BLOBS];
    int num, i;
    
+   
+   //parsing the input
    input = argv[optind++];
    input_len = strlen(input);
    filename = argv[optind];
-  
+   
+   
+   //using stat to get file metadata and using mmap to allocate memory
    int f = open(filename, O_RDONLY);
    fstat(f, &filedata) ;
    addr = mmap(NULL, filedata.st_size, PROT_READ, MAP_SHARED, f, 0);
    atexit(free_map);
    close(f);
 
+   //calculating number of processors on the system and how many we can use
    num = sysconf(_SC_NPROCESSORS_ONLN);
       if (num < 2) {
          num = 1;
@@ -90,6 +99,7 @@ int main(int argc, char *argv[])
          num = MAX_BLOBS;
       }
    
+   //dividing the memory into chunks based on number of processors and threads
    blob[0].start = addr;
    blob[0].len = (int)filedata.st_size / num;
    for (i = 1; i < num; i++) {

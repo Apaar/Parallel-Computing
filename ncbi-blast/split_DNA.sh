@@ -5,14 +5,14 @@ count=$(wc -m < tempProt.txt)        									#wordcount
 
 #TODO: 
 #1. First find number of queries in the dna file
-#2. If only single query go to comment 696969
+#2. If only single query go to comment 5
 #3. If a dna file has multiple queries in it. 
 #4. Split the file into individual query files
 
 
 
 #splitting the dna sequence into 8 parts 
-#696969
+#5
 sed '1d' 8Million_DNA.fa > temp_DNA.txt      					                                 
 split -n 8  -d temp_DNA.txt DNA_split_sequence
 

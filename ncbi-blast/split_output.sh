@@ -41,52 +41,6 @@ for i in $(seq 0 7);do
 	done
 done
 
-
-
-
-
-
-
-
 rm -rf DNA_split_sequence*.fa
-#awk '/Expect =/,/, / { print }'  500k_600k_ParallelOutput1.txt > evalues.txt
-#sed -i 's/Expect =.*, /Expect = 12 , /g' 	500k_600k_ParallelOutput1.txt
-#sed -i 1,21d 500k_600k_ParallelOutput1.txt
-#line_replacement=$(head -1l 500k_600k_ParallelOutput1.txt)
-#MAX_score=$(echo $line_replacement | awk '{print $(NF-1)}')
 
-#for i in  $(seq 2 8);do
-#	sed -i 1,21d 500k_600k_ParallelOutput$i.txt								#remove first 21 lines of parallel_output file
-#	line=$(head -1l 500k_600k_ParallelOutput$i.txt)
-#	score=$(echo $line | awk '{print $(NF-1)}')
-#	if [ $(echo "$score > $MAX_score" | bc) -ne 0 ];then
-#		MAX_score=$score			
-#		line_replacement=$line
-#		f=$i																#store the MAX_score file number	
-#	fi
-#done
-
-#sed '1d' DNA_split_sequence0$f.fa > temp_DNA.txt
-#count_DNA_partition=$(wc -c < temp_DNA.txt)
-#v=$(echo "$count_DNA / $count_DNA_partition" | bc -l)
-#E_value=$(echo $line_replacement | awk '{print $NF}' )
-#E_v=$(echo "scale=4; ($E_value * $v)/1" | bc)
-#line_replacement=$(echo $line_replacement|sed s/"$E_value"//g)
-#line_replacement=$line_replacement"\t"$E_v
-#echo $line_replacement >> FinalOutput.txt
-#sed 2,7d 500k_600k_ParallelOutput1.txt > seq.txt 
-#cat seq.txt >> FinalOutput.txt
-#sed '1d' DNA_split_sequence01.fa > temp_DNA.txt
-#count_DNA_partition=$(wc -c < temp_DNA.txt)
-#v=$(echo "$count_DNA / $count_DNA_partition" | bc -l)
-#grep -Po 'Expect = \K.*(?=,)'  500k_600k_ParallelOutput1.txt > outfile.txt    #expect value of all hits into another file
-#while read line
-#do
-#	e=$(echo "scale=3; ($line * $v)/1 "|bc)
-#	echo $e
-#done < outfile.txt
-#sed -i 's/Expect =.*, /Expect = 12 , /g' 	500k_600k_ParallelOutput1.txt    #replace expect value
-#tail -22l 500k_600k_ParallelOutput1.txt > tail_Lambda.txt				#stores the last tail part of output
-#head -n -22 500k_600k_ParallelOutput1.txt > temp.txt					#removes last 22 lines
-#mv temp.txt 500k_600k_ParallelOutput1.txt
 
